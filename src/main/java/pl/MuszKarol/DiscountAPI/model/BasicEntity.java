@@ -1,13 +1,18 @@
 package pl.MuszKarol.DiscountAPI.model;
 
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import java.util.UUID;
 
+@Getter
+@Setter
+@MappedSuperclass
 public class BasicEntity {
 
     @Id

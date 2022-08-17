@@ -11,7 +11,7 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@Entity(name = "category")
+@Entity
 public class Category extends BasicEntity {
 
     private String name;

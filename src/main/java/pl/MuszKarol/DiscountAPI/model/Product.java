@@ -15,7 +15,6 @@ public class Product extends BasicEntity {
 
     private String name;
     private String description;
-    private String imageName;
 
     @ManyToOne
     private Category category;
