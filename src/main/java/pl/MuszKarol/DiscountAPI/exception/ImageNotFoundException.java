@@ -3,7 +3,7 @@ package pl.MuszKarol.DiscountAPI.exception;
 import java.io.FileNotFoundException;
 
 public class ImageNotFoundException extends FileNotFoundException {
-    ImageNotFoundException(String errorMessage) {
+    public ImageNotFoundException(String errorMessage) {
         super(errorMessage);
     }
 }
