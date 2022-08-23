@@ -3,6 +3,7 @@ package pl.MuszKarol.DiscountAPI.controller;
 import lombok.AllArgsConstructor;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTORequest;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTOResponse;
 import pl.MuszKarol.DiscountAPI.exception.ImageNotFoundException;
+import pl.MuszKarol.DiscountAPI.exception.InvalidExtensionException;
 import pl.MuszKarol.DiscountAPI.service.DiscountService;
 
 import javax.validation.Valid;
@@ -52,8 +54,9 @@ public class DiscountController {
                     .contentType(MediaType.APPLICATION_OCTET_STREAM)
                     .body(discountService.getImageAsResource(imageName, extension));
         } catch (ImageNotFoundException e) {
-            return ResponseEntity.badRequest()
-                    .build();
+            return ResponseEntity.badRequest().build();
+        } catch (InvalidExtensionException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }
 
@@ -66,6 +69,8 @@ public class DiscountController {
             return ResponseEntity.ok().body(discountService.saveDiscount(image, discountDTORequest));
         } catch (FileUploadException e) {
             return ResponseEntity.badRequest().build();
+        } catch (InvalidExtensionException e) {
+            return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
         }
     }
 }

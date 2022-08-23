@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTORequest;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTOResponse;
 import pl.MuszKarol.DiscountAPI.exception.ImageNotFoundException;
+import pl.MuszKarol.DiscountAPI.exception.InvalidExtensionException;
 import pl.MuszKarol.DiscountAPI.mapper.DiscountMapper;
 import pl.MuszKarol.DiscountAPI.model.Discount;
 import pl.MuszKarol.DiscountAPI.model.Product;
@@ -15,6 +16,7 @@ import pl.MuszKarol.DiscountAPI.repository.DiscountRepository;
 import pl.MuszKarol.DiscountAPI.repository.ProductRepository;
 import pl.MuszKarol.DiscountAPI.service.DiscountService;
 import pl.MuszKarol.DiscountAPI.util.FileManager;
+import pl.MuszKarol.DiscountAPI.util.validator.ImageExtensionValidator;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,6 +33,7 @@ public class DiscountServiceImpl implements DiscountService {
     private final ProductRepository productRepository;
     private final DiscountMapper discountMapper;
     private final FileManager fileManager;
+    private final ImageExtensionValidator imageExtensionValidator;
 
     @Override
     public List<DiscountDTOResponse> takeDiscountsByDate(Date startDate, Date endDate) {
@@ -41,12 +44,14 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public DiscountDTOResponse saveDiscount(MultipartFile image, DiscountDTORequest discountDTORequest) throws FileUploadException {
+    public DiscountDTOResponse saveDiscount(MultipartFile image, DiscountDTORequest discountDTORequest)
+            throws FileUploadException, InvalidExtensionException {
+        String extension = imageExtensionValidator.run(discountDTORequest.imageExtension);
         Product product = getProduct(discountDTORequest);
         Discount discount = createDiscount(discountDTORequest, product);
 
         try {
-            saveImage(image, discount, discountDTORequest.imageExtension);
+            saveImage(image, discount, extension);
         } catch (IOException e) {
             throw new FileUploadException();
         }
@@ -55,9 +60,12 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     @Override
-    public Resource getImageAsResource(String filename, String imageExtension) throws ImageNotFoundException {
+    public Resource getImageAsResource(String filename, String imageExtension)
+            throws ImageNotFoundException, InvalidExtensionException {
+        String extension = imageExtensionValidator.run(imageExtension);
+
         try {
-            return fileManager.getImageAsInputStreamResource(filename, imageExtension);
+            return fileManager.getImageAsInputStreamResource(filename, extension);
         } catch (FileNotFoundException e) {
             throw new ImageNotFoundException("Image not found!");
         }
