@@ -16,11 +16,15 @@
     <name>DiscountAPI</name>
 
     <properties>
+        <active-profile>dev</active-profile>
+        <start-class>pl.MuszKarol.DiscountAPI.DiscountApiApplication</start-class>
         <java.version>17</java.version>
-        <openapi.ui.version>1.6.9</openapi.ui.version>
+        <openapi.ui.version>1.6.11</openapi.ui.version>
         <org.projectlombok.version>1.18.24</org.projectlombok.version>
         <org.mapstruct.version>1.5.2.Final</org.mapstruct.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
+        <org.postgresql.verion>42.5.0</org.postgresql.verion>
+        <com.h2database.verion>2.1.214</com.h2database.verion>
     </properties>
 
     <dependencies>
@@ -35,12 +39,20 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
+            <version>${org.postgresql.verion}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${com.h2database.verion}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${org.projectlombok.version}</version>
+            <scope>compile</scope>
             <optional>true</optional>
         </dependency>
         <dependency>

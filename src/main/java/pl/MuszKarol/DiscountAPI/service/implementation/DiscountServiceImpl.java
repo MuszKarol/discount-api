@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTORequest;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTOResponse;
 import pl.MuszKarol.DiscountAPI.exception.ImageNotFoundException;
-import pl.MuszKarol.DiscountAPI.exception.InvalidExtensionException;
+import pl.MuszKarol.DiscountAPI.exception.InvalidImageExtensionException;
 import pl.MuszKarol.DiscountAPI.mapper.DiscountMapper;
 import pl.MuszKarol.DiscountAPI.model.Discount;
 import pl.MuszKarol.DiscountAPI.model.Product;
@@ -45,7 +45,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public DiscountDTOResponse saveDiscount(MultipartFile image, DiscountDTORequest discountDTORequest)
-            throws FileUploadException, InvalidExtensionException {
+            throws FileUploadException, InvalidImageExtensionException {
         String extension = imageExtensionValidator.run(discountDTORequest.imageExtension);
         Product product = getProduct(discountDTORequest);
         Discount discount = createDiscount(discountDTORequest, product);
@@ -61,7 +61,7 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public Resource getImageAsResource(String filename, String imageExtension)
-            throws ImageNotFoundException, InvalidExtensionException {
+            throws ImageNotFoundException, InvalidImageExtensionException {
         String extension = imageExtensionValidator.run(imageExtension);
 
         try {

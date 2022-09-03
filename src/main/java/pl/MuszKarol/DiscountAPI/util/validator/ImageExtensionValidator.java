@@ -1,7 +1,7 @@
 package pl.MuszKarol.DiscountAPI.util.validator;
 
 import org.springframework.stereotype.Component;
-import pl.MuszKarol.DiscountAPI.exception.InvalidExtensionException;
+import pl.MuszKarol.DiscountAPI.exception.InvalidImageExtensionException;
 
 import java.util.List;
 
@@ -14,13 +14,13 @@ public class ImageExtensionValidator {
         this.extensions = List.of("jpg", "png", "gif");
     }
 
-    public String run(String extension) throws InvalidExtensionException {
+    public String run(String extension) throws InvalidImageExtensionException {
         boolean present = extensions.stream().anyMatch(x -> x.equals(extension.toLowerCase()));
 
         if (present) {
             return extension.toLowerCase();
         } else {
-            throw new InvalidExtensionException("Extension is not supported!");
+            throw new InvalidImageExtensionException("Extension is not supported!");
         }
     }
 }
