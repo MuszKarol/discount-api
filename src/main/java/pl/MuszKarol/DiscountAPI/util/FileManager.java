@@ -1,5 +1,6 @@
 package pl.MuszKarol.DiscountAPI.util;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Component;
 
@@ -13,14 +14,11 @@ import java.nio.file.Paths;
 public class FileManager {
 
     private final Path path;
+    private final String pathFromContentRoot;
 
-    FileManager() {
+    FileManager(@Value("${image.folder.root.path:src/main/resources/images}") String pathFromContentRoot) {
+        this.pathFromContentRoot = pathFromContentRoot;
         path = locateFolderToStoreImages();
-    }
-
-    private static Path locateFolderToStoreImages() {
-        return Paths.get("src/main/resources/images/")
-                .toAbsolutePath();
     }
 
     public File getNewFile(String fileName, String fileExtension) {
@@ -35,7 +33,12 @@ public class FileManager {
         return new InputStreamResource(new FileInputStream(file));
     }
 
+    private Path locateFolderToStoreImages() {
+        return Paths.get(pathFromContentRoot)
+                .toAbsolutePath();
+    }
+
     private String getFilePath(String fileName, String fileExtension) {
-        return path.toString() + "\\" + fileName + "." + fileExtension;
+        return path + File.separator + fileName + "." + fileExtension;
     }
 }

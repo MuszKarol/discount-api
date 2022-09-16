@@ -4,7 +4,6 @@ import java.sql.Date;
 
 public class DiscountDTORequest {
     public String url;
-    public String imageExtension;
     public String productName;
     public String description;
     public Date discountStartDate;

@@ -1,27 +1,18 @@
 package pl.MuszKarol.DiscountAPI.service.implementation;
 
 import lombok.AllArgsConstructor;
-import org.apache.tomcat.util.http.fileupload.FileUploadException;
-import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTORequest;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTOResponse;
-import pl.MuszKarol.DiscountAPI.exception.ImageNotFoundException;
-import pl.MuszKarol.DiscountAPI.exception.InvalidImageExtensionException;
 import pl.MuszKarol.DiscountAPI.mapper.DiscountMapper;
 import pl.MuszKarol.DiscountAPI.model.Discount;
 import pl.MuszKarol.DiscountAPI.model.Product;
 import pl.MuszKarol.DiscountAPI.repository.DiscountRepository;
 import pl.MuszKarol.DiscountAPI.repository.ProductRepository;
 import pl.MuszKarol.DiscountAPI.service.DiscountService;
-import pl.MuszKarol.DiscountAPI.util.FileManager;
-import pl.MuszKarol.DiscountAPI.util.validator.ImageExtensionValidator;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,48 +23,37 @@ public class DiscountServiceImpl implements DiscountService {
     private final DiscountRepository discountRepository;
     private final ProductRepository productRepository;
     private final DiscountMapper discountMapper;
-    private final FileManager fileManager;
-    private final ImageExtensionValidator imageExtensionValidator;
 
     @Override
-    public List<DiscountDTOResponse> takeDiscountsByDate(Date startDate, Date endDate) {
-        return discountRepository.getDiscountsByDiscountEndDateLessThanAndDiscountStartDateGreaterThan(endDate, startDate)
-                .stream()
-                .map(discountMapper::discountToDiscountDTOResponse)
-                .toList();
+    public List<DiscountDTOResponse> getAllDiscountsOfTheCurrentMonth() {
+        return getDiscountsByDate(
+                Date.valueOf(LocalDate.now().minusMonths(1)),
+                Date.valueOf(LocalDate.now())
+        );
     }
 
     @Override
-    public DiscountDTOResponse saveDiscount(MultipartFile image, DiscountDTORequest discountDTORequest)
-            throws FileUploadException, InvalidImageExtensionException {
-        String extension = imageExtensionValidator.run(discountDTORequest.imageExtension);
+    public List<DiscountDTOResponse> getAllDiscountsOfTheCurrentWeek() {
+        return getDiscountsByDate(
+                Date.valueOf(LocalDate.now().minusWeeks(1)),
+                Date.valueOf(LocalDate.now())
+        );
+    }
+
+    @Override
+    public DiscountDTOResponse saveDiscount(DiscountDTORequest discountDTORequest) {
+
         Product product = getProduct(discountDTORequest);
         Discount discount = createDiscount(discountDTORequest, product);
-
-        try {
-            saveImage(image, discount, extension);
-        } catch (IOException e) {
-            throw new FileUploadException();
-        }
 
         return discountMapper.discountToDiscountDTOResponse(discount);
     }
 
-    @Override
-    public Resource getImageAsResource(String filename, String imageExtension)
-            throws ImageNotFoundException, InvalidImageExtensionException {
-        String extension = imageExtensionValidator.run(imageExtension);
-
-        try {
-            return fileManager.getImageAsInputStreamResource(filename, extension);
-        } catch (FileNotFoundException e) {
-            throw new ImageNotFoundException("Image not found!");
-        }
-    }
-
-    private void saveImage(MultipartFile image, Discount discount, String imageExtension) throws IOException {
-        File file = fileManager.getNewFile("discount_image_" + discount.getId(), imageExtension);
-        image.transferTo(file);
+    private List<DiscountDTOResponse> getDiscountsByDate(Date startDate, Date endDate) {
+        return discountRepository.getDiscountsByDiscountEndDateLessThanAndDiscountStartDateGreaterThan(endDate, startDate)
+                .stream()
+                .map(discountMapper::discountToDiscountDTOResponse)
+                .toList();
     }
 
     private Discount createDiscount(DiscountDTORequest discountDTORequest, Product product) {

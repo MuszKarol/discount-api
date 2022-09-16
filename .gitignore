@@ -1,3 +1,4 @@
+bin/
 src/main/resources/application*
 src/main/resources/images
 HELP.md
