@@ -1,17 +1,16 @@
 package pl.MuszKarol.DiscountAPI.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.Entity;
 
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
 @Entity
 public class Image extends BasicEntity {
-
+    private String imageName;
+    private String extension;
 }

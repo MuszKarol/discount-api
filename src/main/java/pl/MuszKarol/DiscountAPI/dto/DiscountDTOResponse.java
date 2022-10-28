@@ -1,6 +1,7 @@
 package pl.MuszKarol.DiscountAPI.dto;
 
 import java.sql.Date;
+import java.util.List;
 
 public class DiscountDTOResponse {
     public String discountId;
@@ -13,4 +14,5 @@ public class DiscountDTOResponse {
     public Long newPrice;
     public Integer likes;
     public Integer dislikes;
+    public List<ImageDTO> images;
 }

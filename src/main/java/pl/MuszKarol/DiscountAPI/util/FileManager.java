@@ -39,6 +39,12 @@ public class FileManager {
     }
 
     private String getFilePath(String fileName, String fileExtension) {
-        return path + File.separator + fileName + "." + fileExtension;
+        return new StringBuilder()
+                .append(path)
+                .append(File.separator)
+                .append(fileName)
+                .append(".")
+                .append(fileExtension)
+                .toString();
     }
 }

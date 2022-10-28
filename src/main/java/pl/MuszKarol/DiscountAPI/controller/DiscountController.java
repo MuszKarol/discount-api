@@ -18,7 +18,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/discounts")
+@RequestMapping(value = "/discounts")
 public class DiscountController {
 
     private final DiscountService discountService;
