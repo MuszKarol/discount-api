@@ -1,6 +1,7 @@
 package pl.MuszKarol.DiscountAPI.service.implementation;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class ImageServiceImpl implements ImageService {
     private final ImageRepository imageRepository;
     private final DiscountRepository discountRepository;
     private final FileManager fileManager;
+    private final DigestUtils digestUtils;
 
     @Value("${image.name.prefix:discount_image_}")
     private String imagePrefix;
@@ -40,7 +42,6 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Resource getImageAsResource(String filename, String imageExtension)
             throws ImageNotFoundException, InvalidImageExtensionException {
-
         String extension = imageExtensionValidator.run(imageExtension);
 
         try {
@@ -53,7 +54,6 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public List<ImageDTOResponse> saveImages(List<MultipartFile> multipartFileList, UUID discountId)
             throws IOException, InvalidImageExtensionException {
-
         List<ImageDTOResponse> responseList = new LinkedList<>();
         Optional<Discount> discountOptional = discountRepository.findById(discountId);
 
@@ -62,9 +62,7 @@ public class ImageServiceImpl implements ImageService {
         }
 
         Discount discount = discountOptional.get();
-
         processImages(multipartFileList, discountId, responseList, discount);
-
         discountRepository.save(discount);
 
         return responseList;
@@ -74,7 +72,6 @@ public class ImageServiceImpl implements ImageService {
                                UUID discountId,
                                List<ImageDTOResponse> responseList,
                                Discount discount) throws IOException, InvalidImageExtensionException {
-
         List<Image> newImages = discount.getImages();
 
         for (MultipartFile multipartFile : multipartFileList) {
@@ -86,16 +83,15 @@ public class ImageServiceImpl implements ImageService {
     private ImageDTOResponse createImageDTOResponse(UUID discountId) {
         return ImageDTOResponse.builder()
                 .discountId(discountId)
-                .imageName(imagePrefix + discountId)
+                .imageName(buildNewImageName(discountId))
                 .saved(true)
                 .timestamp(new Timestamp(System.currentTimeMillis()))
                 .build();
     }
 
-    private Image saveImage(MultipartFile image, UUID uuid) throws IOException, InvalidImageExtensionException {
+    private Image saveImage(MultipartFile image, UUID discountId) throws IOException, InvalidImageExtensionException {
         String extension = imageExtensionValidator.run(getImageContentType(image));
-        String imageName = buildNewImageName(uuid);
-
+        String imageName = buildNewImageName(discountId);
         File file = fileManager.getNewFile(imageName, extension);
 
         image.transferTo(file);
@@ -103,8 +99,8 @@ public class ImageServiceImpl implements ImageService {
         return imageRepository.save(new Image(imageName, extension));
     }
 
-    private String buildNewImageName(UUID uuid) {
-        return imagePrefix + uuid + imageRepository.count();
+    private String buildNewImageName(UUID discountId) {
+        return digestUtils.digestAsHex(imagePrefix + discountId + imageRepository.count());
     }
 
     private String getImageContentType(MultipartFile image) throws InvalidImageExtensionException {
@@ -113,6 +109,7 @@ public class ImageServiceImpl implements ImageService {
         if (contentType == null) {
             throw new InvalidImageExtensionException("No content type!");
         }
+
         return contentType;
     }
 }

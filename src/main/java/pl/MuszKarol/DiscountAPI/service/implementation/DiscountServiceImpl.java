@@ -49,7 +49,6 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public DiscountDTOResponse saveDiscount(DiscountDTORequest discountDTORequest) {
-
         Product product = getProduct(discountDTORequest);
         Discount discount = createDiscount(discountDTORequest, product);
 

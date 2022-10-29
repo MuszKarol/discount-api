@@ -3,22 +3,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.2</version>
-        <relativePath/>
-    </parent>
-
     <groupId>pl.MuszKarol</groupId>
     <artifactId>DiscountAPI</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>DiscountAPI</name>
 
     <properties>
-        <active-profile>dev</active-profile>
         <start-class>pl.MuszKarol.DiscountAPI.DiscountApiApplication</start-class>
+        <active-profile>dev</active-profile>
         <java.version>17</java.version>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
         <openapi.ui.version>1.6.11</openapi.ui.version>
         <org.projectlombok.version>1.18.24</org.projectlombok.version>
         <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
@@ -26,6 +21,13 @@
         <org.postgresql.verion>42.5.0</org.postgresql.verion>
         <com.h2database.verion>2.1.214</com.h2database.verion>
     </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.7.2</version>
+        <relativePath/>
+    </parent>
 
     <dependencies>
         <dependency>
@@ -61,6 +63,11 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
         <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.15</version>
+        </dependency>
+        <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
             <version>${openapi.ui.version}</version>
@@ -92,8 +99,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
