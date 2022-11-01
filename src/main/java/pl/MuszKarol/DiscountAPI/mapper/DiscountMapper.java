@@ -4,7 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import pl.MuszKarol.DiscountAPI.dto.DiscountDTOResponse;
-import pl.MuszKarol.DiscountAPI.dto.ImageDTO;
+import pl.MuszKarol.DiscountAPI.dto.ImageIdentificationDetailsDTO;
 import pl.MuszKarol.DiscountAPI.model.Discount;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public interface DiscountMapper {
             @Mapping(source = "discount.dislikes", target = "dislikes"),
             @Mapping(source = "discount.product.name", target = "productName"),
             @Mapping(source = "discount.product.description", target = "description"),
-            @Mapping(source = "imageDTOList", target = "images")
+            @Mapping(source = "listOfImageDTO", target = "images")
     })
-    DiscountDTOResponse discountToDiscountDTOResponse(Discount discount, List<ImageDTO> imageDTOList);
+    DiscountDTOResponse discountToDiscountDTOResponse(Discount discount, List<ImageIdentificationDetailsDTO> listOfImageDTO);
 }

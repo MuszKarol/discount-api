@@ -1,5 +1,7 @@
 package pl.MuszKarol.DiscountAPI.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import pl.MuszKarol.DiscountAPI.model.Discount;
@@ -9,9 +11,11 @@ import java.util.List;
 import java.util.UUID;
 
 public interface DiscountRepository extends JpaRepository<Discount, UUID> {
-    List<Discount> getDiscountsByDiscountEndDateLessThanAndDiscountStartDateGreaterThan(Date discountEndDate, Date discountStartDate);
+    Page<Discount> findAllBy(Pageable pageable);
 
-    @Query("SELECT d FROM discount d WHERE d.discountEndDate <= :discountEndDate " +
-            "AND d.discountStartDate >= :discountStartDate")
-    List<Discount> GetDiscountByGivenDates(Date discountEndDate, Date discountStartDate);
+    @Query(value = "SELECT d FROM Discount d WHERE d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
+    List<Discount> getDiscountByGivenDates(Date discountStartDate, Date discountEndDate);
+
+    @Query("select d from Discount d where d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
+    Page<Discount> getDiscountByGivenDates(Date discountStartDate, Date discountEndDate, Pageable pageable);
 }

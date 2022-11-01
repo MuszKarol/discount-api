@@ -1,15 +1,19 @@
 package pl.MuszKarol.DiscountAPI.dto;
 
 
-import lombok.Builder;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
 @Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class ImageDTOResponse {
-    public UUID discountId;
-    public String imageName;
-    public boolean saved;
-    public Timestamp timestamp;
+    private UUID discountId;
+    private String imageName;
+    private boolean saved;
+    private Timestamp timestamp;
 }

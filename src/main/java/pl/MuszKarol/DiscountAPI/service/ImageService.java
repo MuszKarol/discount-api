@@ -11,8 +11,9 @@ import java.util.List;
 import java.util.UUID;
 
 public interface ImageService {
+    Resource getImageAsResource(String filename, String imageExtension)
+            throws ImageNotFoundException, InvalidImageExtensionException;
 
-    Resource getImageAsResource(String filename, String imageExtension) throws ImageNotFoundException, InvalidImageExtensionException;
-
-    List<ImageDTOResponse> saveImages(List<MultipartFile> multipartFileList, UUID discountUuid) throws IOException, InvalidImageExtensionException;
+    List<ImageDTOResponse> saveImages(List<MultipartFile> multipartFileList, UUID discountUuid)
+            throws IOException, InvalidImageExtensionException;
 }

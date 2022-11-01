@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @Getter
 @Builder
-@Entity(name = "discount")
+@Entity
 public class Discount extends BasicEntity implements Serializable {
 
     private Date discountStartDate;

@@ -21,5 +21,4 @@ public class HashFunctionConfiguration {
     public DigestUtils sha512() {
         return new DigestUtils(SHA_512);
     }
-
 }
