@@ -16,6 +16,6 @@ public interface DiscountRepository extends JpaRepository<Discount, UUID> {
     @Query(value = "SELECT d FROM Discount d WHERE d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
     List<Discount> getDiscountByGivenDates(Date discountStartDate, Date discountEndDate);
 
-    @Query("select d from Discount d where d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
+    @Query(value = "SELECT d FROM Discount d WHERE d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
     Page<Discount> getDiscountByGivenDates(Date discountStartDate, Date discountEndDate, Pageable pageable);
 }

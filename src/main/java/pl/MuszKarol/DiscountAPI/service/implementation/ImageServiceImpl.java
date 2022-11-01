@@ -75,15 +75,16 @@ public class ImageServiceImpl implements ImageService {
         List<Image> newImages = discount.getImages();
 
         for (MultipartFile multipartFile : multipartFileList) {
-            newImages.add(saveImage(multipartFile, discountId));
-            responseList.add(createImageDTOResponse(discountId));
+            Image image = saveImage(multipartFile, discountId);
+            newImages.add(image);
+            responseList.add(createImageDTOResponse(discountId, image));
         }
     }
 
-    private ImageDTOResponse createImageDTOResponse(UUID discountId) {
+    private ImageDTOResponse createImageDTOResponse(UUID discountId, Image image) {
         return ImageDTOResponse.builder()
                 .discountId(discountId)
-                .imageName(buildNewImageName(discountId))
+                .imageName(image.getImageName())
                 .saved(true)
                 .timestamp(new Timestamp(System.currentTimeMillis()))
                 .build();

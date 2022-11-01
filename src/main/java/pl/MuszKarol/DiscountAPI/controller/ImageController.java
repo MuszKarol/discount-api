@@ -62,7 +62,7 @@ public class ImageController {
             @RequestParam String imageName,
             @Parameter(
                     name = "extension",
-                    schema = @Schema(type = "string", allowableValues = {"jpg", "png", "gif"}),
+                    schema = @Schema(type = "string", allowableValues = {"jpeg", "png", "gif"}),
                     description = "Only allowed image file extensions are supported"
             )
             @RequestParam String extension

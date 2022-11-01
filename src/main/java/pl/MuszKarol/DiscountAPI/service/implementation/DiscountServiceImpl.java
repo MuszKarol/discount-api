@@ -99,14 +99,14 @@ public class DiscountServiceImpl implements DiscountService {
     }
 
     private List<DiscountDTOResponse> getDiscountsByDate(Date startDate, Date endDate) {
-        return discountRepository.getDiscountByGivenDates(endDate, startDate)
+        return discountRepository.getDiscountByGivenDates(startDate, endDate)
                 .stream()
                 .map(this::getDiscountDTOResponse)
                 .toList();
     }
 
     private Page<DiscountDTOResponse> getDiscountByDateAndPageable(Date startDate, Date endDate, Pageable pageable) {
-        return discountRepository.getDiscountByGivenDates(endDate, startDate, pageable)
+        return discountRepository.getDiscountByGivenDates(startDate, endDate, pageable)
                 .map(this::getDiscountDTOResponse);
     }
 
