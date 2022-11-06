@@ -3,13 +3,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>pl.MuszKarol</groupId>
-    <artifactId>DiscountAPI</artifactId>
+    <groupId>pl.musz.karol</groupId>
+    <artifactId>discountapi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>DiscountAPI</name>
 
     <properties>
-        <start-class>pl.MuszKarol.DiscountAPI.DiscountApiApplication</start-class>
+        <start-class>pl.musz.karol.discountapi.DiscountApiApplication</start-class>
         <active-profile>dev</active-profile>
         <java.version>17</java.version>
         <maven.compiler.target>17</maven.compiler.target>
