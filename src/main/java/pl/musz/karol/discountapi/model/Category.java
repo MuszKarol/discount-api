@@ -3,6 +3,7 @@ package pl.musz.karol.discountapi.model;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 public class Category extends BasicEntity {
 
+    @NotBlank
     private String name;
 
     @ManyToOne

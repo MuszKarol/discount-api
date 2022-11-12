@@ -5,7 +5,6 @@ import lombok.*;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import java.io.Serializable;
 import java.sql.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,12 +15,12 @@ import java.util.List;
 @Getter
 @Builder
 @Entity
-public class Discount extends BasicEntity implements Serializable {
+public class Discount extends BasicEntity {
 
     private Date discountStartDate;
     private Date discountEndDate;
-    private String url;
     private Long basePrice;
+    private String url;
     private Long newPrice;
     private Integer likes;
     private Integer dislikes;

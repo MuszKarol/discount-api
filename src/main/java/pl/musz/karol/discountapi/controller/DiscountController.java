@@ -13,10 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import pl.musz.karol.discountapi.dto.DiscountDTORequest;
 import pl.musz.karol.discountapi.dto.DiscountDTOResponse;
 import pl.musz.karol.discountapi.service.DiscountService;
+
+import javax.validation.Valid;
 
 @AllArgsConstructor
 @RestController
@@ -25,6 +28,16 @@ public class DiscountController {
 
     private final DiscountService discountService;
 
+    @ApiResponse(
+            responseCode = "400",
+            description = "Incorrect data detected during validation"
+    )
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<String> handleValidationException(MethodArgumentNotValidException e) {
+        return ResponseEntity.badRequest()
+                .body("Invalid attribute in request body: " + e.getParameter().getParameterType());
+    }
 
     @Operation(summary = "Get all published discounts")
     @ApiResponse(
@@ -90,7 +103,7 @@ public class DiscountController {
             )
     })
     @PostMapping(value = "/new")
-    public ResponseEntity<DiscountDTOResponse> saveDiscount(@RequestBody DiscountDTORequest discountDTORequest) {
+    public ResponseEntity<DiscountDTOResponse> saveDiscount(@Valid @RequestBody DiscountDTORequest discountDTORequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(discountService.saveDiscount(discountDTORequest));
     }
