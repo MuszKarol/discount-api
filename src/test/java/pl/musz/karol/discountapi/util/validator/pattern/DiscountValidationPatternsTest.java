@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class DiscountValidationPatternsTest {
 
     @Test
-    public void urlPatternDoesNotMatchTest() {
+    void urlPatternDoesNotMatchTest() {
         String invalidUrl = "https://docs_spring-io/";
 
         boolean result = getMatchResult(invalidUrl,
@@ -20,7 +20,7 @@ class DiscountValidationPatternsTest {
     }
 
     @Test
-    public void urlPatternDoesMatchTest() {
+    void urlPatternDoesMatchTest() {
         String url = "https://docs.spring.io/";
 
         boolean result = getMatchResult(url,
@@ -30,7 +30,7 @@ class DiscountValidationPatternsTest {
     }
 
     @Test
-    public void productNamePatternDoesNotMatchTest() {
+    void productNamePatternDoesNotMatchTest() {
         String invalidProductName = "Example Product 8.";
 
         boolean result = getMatchResult(invalidProductName,
@@ -40,7 +40,7 @@ class DiscountValidationPatternsTest {
     }
 
     @Test
-    public void productNamePatternDoesMatchTest() {
+    void productNamePatternDoesMatchTest() {
         String productName = "Example Product 8";
 
         boolean result = getMatchResult(productName,
@@ -50,7 +50,7 @@ class DiscountValidationPatternsTest {
     }
 
     @Test
-    public void productDescriptionPatternDoesNotMatchTest() {
+    void productDescriptionPatternDoesNotMatchTest() {
         String invalidProductDescription = "Test description 1$.";
 
         boolean result = getMatchResult(invalidProductDescription,
@@ -60,7 +60,7 @@ class DiscountValidationPatternsTest {
     }
 
     @Test
-    public void productDescriptionPatternDoesMatchTest() {
+    void productDescriptionPatternDoesMatchTest() {
         String productDescription = "Test description 1.";
 
         boolean result = getMatchResult(productDescription,

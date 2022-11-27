@@ -13,9 +13,16 @@ import java.util.UUID;
 public interface DiscountRepository extends JpaRepository<Discount, UUID> {
     Page<Discount> findAllBy(Pageable pageable);
 
-    @Query(value = "SELECT d FROM Discount d WHERE d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
+    @Query(value = "SELECT d FROM Discount d WHERE d.discountStartDate >= :discountStartDate AND" +
+            " d.discountEndDate <= :discountEndDate")
     List<Discount> getDiscountByGivenDates(Date discountStartDate, Date discountEndDate);
 
-    @Query(value = "SELECT d FROM Discount d WHERE d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
+    @Query(value = "SELECT d FROM Discount d WHERE d.discountStartDate >= :discountStartDate AND" +
+            " d.discountEndDate <= :discountEndDate")
     Page<Discount> getDiscountByGivenDates(Date discountStartDate, Date discountEndDate, Pageable pageable);
+
+    @Query(value = "SELECT d FROM Discount d WHERE d.product.name like %:productName% AND" +
+            " d.discountStartDate >= :discountStartDate AND d.discountEndDate <= :discountEndDate")
+    Page<Discount> getDiscountByGivenDates(Date discountStartDate, Date discountEndDate,
+                                           String productName, Pageable pageable);
 }

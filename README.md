@@ -59,7 +59,7 @@ Sonar Cube is an open-source platform for continuous inspection of code quality.
 
 #### Build the Sonar Cube container using docker-compose command
 ```sh
-docker-compose -f src/main/resources/docker/sonar.yml up -d local-sonar
+docker-compose -f src/main/resources/docker/sonar/sonar.yml up -d local-sonar
 ```
 
 #### Start code quality analysis using maven command
@@ -73,7 +73,7 @@ mvn clean verify sonar:sonar -Dsonar.host.url=http://localhost:9001 -Pcoverage
 ```
 
 ## Project Status
-Project is: in progress
+under development
 
 ## Sources
 ##### OpenAPI Specification 

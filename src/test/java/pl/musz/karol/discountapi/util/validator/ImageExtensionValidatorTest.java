@@ -1,39 +1,27 @@
 package pl.musz.karol.discountapi.util.validator;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
 import java.util.List;
 
-import static org.junit.Assert.*;
 
-
-public class ImageExtensionValidatorTest {
+class ImageExtensionValidatorTest {
 
     private final ImageExtensionValidator imageExtensionValidator = new ImageExtensionValidator(List.of("png", "jpeg", "gif"));
 
-    @Test
-    public void validateJpegExtensionTest() {
-        String extension = "jpeg";
-
+    @ParameterizedTest
+    @ValueSource(strings = {"jpeg", "gif", "png"})
+    void validExtensionTest(String extension) {
         ValidationStatus result = imageExtensionValidator.run(extension);
-
-        assertEquals(ValidationStatus.VALID, result);
+        Assertions.assertEquals(ValidationStatus.VALID, result);
     }
 
-    @Test
-    public void validateGifExtensionTest() {
-        String extension = "gif";
-
+    @ParameterizedTest
+    @ValueSource(strings = {"jpg", "Gif", ".png"})
+    void invalidExtensionTest(String extension) {
         ValidationStatus result = imageExtensionValidator.run(extension);
-
-        assertEquals(ValidationStatus.VALID, result);
-    }
-
-    @Test
-    public void validatePngExtensionTest() {
-        String extension = "png";
-
-        ValidationStatus result = imageExtensionValidator.run(extension);
-
-        assertEquals(ValidationStatus.VALID, result);
+        Assertions.assertEquals(ValidationStatus.INVALID, result);
     }
 }

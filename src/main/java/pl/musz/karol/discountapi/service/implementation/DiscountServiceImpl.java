@@ -36,7 +36,7 @@ public class DiscountServiceImpl implements DiscountService {
     private final ImageMapper imageMapper;
 
     @Override
-    public Page<DiscountDTOResponse> getAllDiscounts(Pageable pageable) {
+    public Page<DiscountDTOResponse> getAllDiscounts(Pageable pageable, Optional<String> productName) {
         return discountRepository.findAllBy(pageable)
                 .map(this::getDiscountDTOResponse);
     }
@@ -51,22 +51,26 @@ public class DiscountServiceImpl implements DiscountService {
 
     @Override
     public List<DiscountDTOResponse> getAllDiscountsOfTheCurrentMonth() {
-        return getDiscountsByDate(getDate(DateType.MONTH), getDate(DateType.NOW));
+        return getDiscounts(getDate(DateType.MONTH), getDate(DateType.NOW));
     }
 
     @Override
-    public Page<DiscountDTOResponse> getAllDiscountsOfTheCurrentMonth(Pageable pageable) {
-        return this.getDiscountByDateAndPageable(getDate(DateType.MONTH), getDate(DateType.NOW), pageable);
+    public Page<DiscountDTOResponse> getAllDiscountsOfTheCurrentMonth(Pageable pageable, Optional<String> productName) {
+        return productName
+                .map(product -> getDiscount(getDate(DateType.MONTH), getDate(DateType.NOW), product, pageable))
+                .orElseGet(() -> getDiscount(getDate(DateType.MONTH), getDate(DateType.NOW), pageable));
     }
 
     @Override
     public List<DiscountDTOResponse> getAllDiscountsOfTheCurrentWeek() {
-        return getDiscountsByDate(getDate(DateType.WEEK), getDate(DateType.NOW));
+        return getDiscounts(getDate(DateType.WEEK), getDate(DateType.NOW));
     }
 
     @Override
-    public Page<DiscountDTOResponse> getAllDiscountsOfTheCurrentWeek(Pageable pageable) {
-        return getDiscountByDateAndPageable(getDate(DateType.WEEK), getDate(DateType.NOW), pageable);
+    public Page<DiscountDTOResponse> getAllDiscountsOfTheCurrentWeek(Pageable pageable, Optional<String> productName) {
+        return productName
+                .map(product -> getDiscount(getDate(DateType.WEEK), getDate(DateType.NOW), product, pageable))
+                .orElseGet(() -> getDiscount(getDate(DateType.WEEK), getDate(DateType.NOW), pageable));
     }
 
     @Override
@@ -96,14 +100,19 @@ public class DiscountServiceImpl implements DiscountService {
                 .collect(Collectors.toList());
     }
 
-    private List<DiscountDTOResponse> getDiscountsByDate(Date startDate, Date endDate) {
+    private List<DiscountDTOResponse> getDiscounts(Date startDate, Date endDate) {
         return discountRepository.getDiscountByGivenDates(startDate, endDate)
                 .stream()
                 .map(this::getDiscountDTOResponse)
                 .collect(Collectors.toList());
     }
 
-    private Page<DiscountDTOResponse> getDiscountByDateAndPageable(Date startDate, Date endDate, Pageable pageable) {
+    private Page<DiscountDTOResponse> getDiscount(Date startDate, Date endDate, String productName, Pageable pageable) {
+        return discountRepository.getDiscountByGivenDates(startDate, endDate, productName, pageable)
+                .map(this::getDiscountDTOResponse);
+    }
+
+    private Page<DiscountDTOResponse> getDiscount(Date startDate, Date endDate, Pageable pageable) {
         return discountRepository.getDiscountByGivenDates(startDate, endDate, pageable)
                 .map(this::getDiscountDTOResponse);
     }
@@ -138,5 +147,4 @@ public class DiscountServiceImpl implements DiscountService {
 
         return productRepository.save(product);
     }
-
 }

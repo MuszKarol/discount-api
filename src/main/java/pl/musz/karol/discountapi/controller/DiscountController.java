@@ -20,6 +20,7 @@ import pl.musz.karol.discountapi.dto.DiscountDTOResponse;
 import pl.musz.karol.discountapi.service.DiscountService;
 
 import javax.validation.Valid;
+import java.util.Optional;
 
 @AllArgsConstructor
 @RestController
@@ -50,8 +51,11 @@ public class DiscountController {
             }
     )
     @GetMapping(value = "/all")
-    public ResponseEntity<Page<DiscountDTOResponse>> getAllDiscounts(@ParameterObject Pageable pageable) {
-        return ResponseEntity.ok().body(discountService.getAllDiscounts(pageable));
+    public ResponseEntity<Page<DiscountDTOResponse>> getAllDiscounts(
+            @ParameterObject Pageable pageable,
+            @RequestParam("product") Optional<String> productName) {
+        return ResponseEntity.ok()
+                .body(discountService.getAllDiscounts(pageable, productName));
     }
 
 
@@ -67,8 +71,11 @@ public class DiscountController {
             }
     )
     @GetMapping(value = "/month")
-    public ResponseEntity<Page<DiscountDTOResponse>> getAllDiscountsNoOlderThanOneMonth(@ParameterObject Pageable pageable) {
-        return ResponseEntity.ok().body(discountService.getAllDiscountsOfTheCurrentMonth(pageable));
+    public ResponseEntity<Page<DiscountDTOResponse>> getAllDiscountsNoOlderThanOneMonth(
+            @ParameterObject Pageable pageable,
+            @RequestParam("product") Optional<String> productName) {
+        return ResponseEntity.ok()
+                .body(discountService.getAllDiscountsOfTheCurrentMonth(pageable, productName));
     }
 
 
@@ -84,8 +91,11 @@ public class DiscountController {
             }
     )
     @GetMapping(value = "/week")
-    public ResponseEntity<Page<DiscountDTOResponse>> getAllDiscountsNoOlderThanOneWeek(@ParameterObject Pageable pageable) {
-        return ResponseEntity.ok().body(discountService.getAllDiscountsOfTheCurrentWeek(pageable));
+    public ResponseEntity<Page<DiscountDTOResponse>> getAllDiscountsNoOlderThanOneWeek(
+            @ParameterObject Pageable pageable,
+            @RequestParam("product") Optional<String> productName) {
+        return ResponseEntity.ok()
+                .body(discountService.getAllDiscountsOfTheCurrentWeek(pageable, productName));
     }
 
 
