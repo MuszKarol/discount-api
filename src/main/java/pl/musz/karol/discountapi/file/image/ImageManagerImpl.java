@@ -10,7 +10,9 @@ import pl.musz.karol.discountapi.exception.ImageNotFoundException;
 import pl.musz.karol.discountapi.exception.InvalidImageExtensionException;
 import pl.musz.karol.discountapi.file.FileHandler;
 import pl.musz.karol.discountapi.model.Image;
+import pl.musz.karol.discountapi.util.formatter.ImageExtensionFormatter;
 import pl.musz.karol.discountapi.util.validator.ImageExtensionValidator;
+import pl.musz.karol.discountapi.util.validator.ValidationStatus;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -34,8 +36,16 @@ public class ImageManagerImpl implements ImageManager {
     public InputStreamResource getImage(String imageName, String extension)
             throws ImageNotFoundException, InvalidImageExtensionException  {
 
+        String formattedExtension = ImageExtensionFormatter.formatExtension(extension);
+        ValidationStatus validationStatus = imageExtensionValidator.run(formattedExtension);
+
+        if (validationStatus.equals(ValidationStatus.INVALID)) {
+            throw new InvalidImageExtensionException("Extension is not supported!");
+        }
+
         try {
-            return fileHandler.getFileAsInputStreamResource(imageName, imageExtensionValidator.run(extension));
+
+            return fileHandler.getFileAsInputStreamResource(imageName, formattedExtension);
         } catch (FileNotFoundException e) {
             throw new ImageNotFoundException("Image not found!");
         }
@@ -88,6 +98,6 @@ public class ImageManagerImpl implements ImageManager {
             throw new InvalidImageExtensionException("No content type!");
         }
 
-        return imageExtensionValidator.run(contentType);
+        return ImageExtensionFormatter.formatExtension(contentType);
     }
 }

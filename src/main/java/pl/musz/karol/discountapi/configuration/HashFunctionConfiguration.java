@@ -1,4 +1,4 @@
-package pl.musz.karol.discountapi.config;
+package pl.musz.karol.discountapi.configuration;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.context.annotation.Bean;

@@ -2,25 +2,22 @@ package pl.musz.karol.discountapi.util.validator;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import pl.musz.karol.discountapi.exception.InvalidImageExtensionException;
 
 import java.util.List;
 
 @Component
 public class ImageExtensionValidator {
 
-    @Value("${image.extensions:jpg,png,gif,jpeg}")
-    private List<String> extensions;
+    private final List<String> extensions;
 
-    public String run(String extension) throws InvalidImageExtensionException {
-        final String modifiedExtension = extension.replace("image/", "");
+    ImageExtensionValidator(@Value("${image.extensions:png,gif,jpeg}") List<String> extensions) {
+        this.extensions = extensions;
+    }
 
-        boolean present = extensions.stream().anyMatch(x -> x.equals(modifiedExtension.toLowerCase()));
+    public ValidationStatus run(String extensionToCompare) {
+        boolean present = extensions.stream()
+                .anyMatch(extension -> extension.equals(extensionToCompare));
 
-        if (present) {
-            return modifiedExtension.toLowerCase();
-        } else {
-            throw new InvalidImageExtensionException("Extension is not supported!");
-        }
+        return present ? ValidationStatus.VALID : ValidationStatus.INVALID;
     }
 }
