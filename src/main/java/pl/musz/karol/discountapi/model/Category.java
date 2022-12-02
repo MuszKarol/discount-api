@@ -19,6 +19,9 @@ public class Category extends BasicEntity {
     @NotBlank
     private String name;
 
+    @NotBlank
+    private Integer level;
+
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "parent_id")
@@ -29,5 +32,5 @@ public class Category extends BasicEntity {
     private List<Category> subcategories = new ArrayList<>();
 
     @OneToMany
-    private List<Product> products;
+    private List<Product> products = new ArrayList<>();
 }
