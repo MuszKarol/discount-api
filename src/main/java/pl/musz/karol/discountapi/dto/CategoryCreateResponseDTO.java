@@ -11,6 +11,7 @@ import java.util.UUID;
 @Getter
 @Builder
 public class CategoryCreateResponseDTO {
+    private UUID id;
     private String categoryName;
     private Integer categoryLevel;
     private List<UUID> productIDs;

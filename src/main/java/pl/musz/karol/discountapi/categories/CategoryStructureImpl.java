@@ -16,7 +16,6 @@ public class CategoryStructureImpl implements CategoryStructure {
 
     public CategoryStructureImpl(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
-        setRootCategory();
     }
 
     @Override
@@ -53,14 +52,10 @@ public class CategoryStructureImpl implements CategoryStructure {
 
         category.setParent(parentCategory);
         category.setLevel(parentCategory.getLevel() + 1);
-
-        if (category.getSubcategories().isEmpty()) {
-            category.setSubcategories(new ArrayList<>());
-        }
-
         rootSubcategories.add(categoryRepository.save(category));
+        categoryRepository.save(parentCategory);
 
-        return categoryRepository.save(parentCategory);
+        return category;
     }
 
     @Override
@@ -70,10 +65,11 @@ public class CategoryStructureImpl implements CategoryStructure {
 
     @Override
     public List<Category> findCategoriesByName(String categoryName) {
-        return categoryRepository.searchCategoryByNameRegex(categoryName);
+        return categoryRepository.findCategoryByNameContaining(categoryName);
     }
 
-    private void setRootCategory() {
+    @Override
+    public void setRootCategory() {
         Optional<Category> rootOptional = categoryRepository.findCategoryByParentIsNull();
 
         if (rootOptional.isPresent()) {
@@ -86,7 +82,9 @@ public class CategoryStructureImpl implements CategoryStructure {
     private void createRootCategory() {
         Category rootCategory = Category.builder()
                 .name("ROOT")
+                .level(0)
                 .subcategories(new ArrayList<>())
+                .products(new ArrayList<>())
                 .build();
 
         root = categoryRepository.save(rootCategory);

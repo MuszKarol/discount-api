@@ -17,21 +17,25 @@ public interface CategoryMapper {
     @Mapping(source = "category.name", target = "subcategoryName")
     SubcategoryDTO subcategoryToSubcategoryDTO(Category category);
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "categoryName", target = "categoryName")
     @Mapping(source = "listOfProductIds", target = "productIDs")
     @Mapping(source = "path", target = "fullPathToRoot")
     @Mapping(source = "subcategoryDTOList", target = "subcategories")
-    CategoryResponseDTO categoryToCategoryResponseDTO(String categoryName,
+    CategoryResponseDTO categoryToCategoryResponseDTO(UUID id,
+                                                      String categoryName,
                                                       List<UUID> listOfProductIds,
                                                       List<UUID> path,
                                                       List<SubcategoryDTO> subcategoryDTOList);
 
+    @Mapping(source = "id", target = "id")
     @Mapping(source = "categoryName", target = "categoryName")
     @Mapping(source = "level", target = "categoryLevel")
     @Mapping(source = "listOfProductIds", target = "productIDs")
     @Mapping(source = "path", target = "fullPathToRoot")
     @Mapping(source = "subcategoryDTOList", target = "subcategories")
-    CategoryCreateResponseDTO categoryToCategoryCreateResponseDTO(String categoryName,
+    CategoryCreateResponseDTO categoryToCategoryCreateResponseDTO(UUID id,
+                                                                  String categoryName,
                                                                   Integer level,
                                                                   List<UUID> listOfProductIds,
                                                                   List<UUID> path,

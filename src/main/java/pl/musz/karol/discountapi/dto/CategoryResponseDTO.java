@@ -11,6 +11,7 @@ import java.util.UUID;
 @Getter
 @Builder
 public class CategoryResponseDTO {
+    private UUID id;
     private String categoryName;
     private List<UUID> productIDs;
     private List<UUID> fullPathToRoot;

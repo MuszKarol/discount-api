@@ -19,7 +19,6 @@ public class Category extends BasicEntity {
     @NotBlank
     private String name;
 
-    @NotBlank
     private Integer level;
 
     @JsonIgnore

@@ -1,6 +1,6 @@
 package pl.musz.karol.discountapi.service.implementation;
 
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,11 +17,14 @@ import pl.musz.karol.discountapi.repository.CategoryRepository;
 import pl.musz.karol.discountapi.repository.ProductRepository;
 import pl.musz.karol.discountapi.service.CategoryService;
 
+import javax.annotation.PostConstruct;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
+@AllArgsConstructor
 @Service
 public class CategoryServiceImpl implements CategoryService {
 
@@ -30,12 +33,9 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryMapper categoryMapper;
     private final ProductRepository productRepository;
 
-    private static Category buildNewCategory(CategoryCreateRequestDTO categoryDTO) {
-        return Category.builder().name(categoryDTO.getCategoryName()).build();
-    }
-
-    private static List<UUID> getProductIds(Category category) {
-        return category.getProducts().stream().map(Product::getId).toList();
+    @PostConstruct
+    public void postConstructRootCategoryCreation() {
+        categoryStructure.setRootCategory();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Page<CategoryResponseDTO> getCategoriesByMatchingPattern(String pattern, Pageable pageable) {
-        return categoryRepository.getPageableCategoriesByNameRegex(pattern, pageable)
+        return categoryRepository.findCategoryByNameContaining(pattern, pageable)
                 .map(this::getCategoryResponseDTO);
     }
 
@@ -79,12 +79,28 @@ public class CategoryServiceImpl implements CategoryService {
                 .map(this::getCategoryResponseDTO);
     }
 
+    private Category buildNewCategory(CategoryCreateRequestDTO categoryDTO) {
+        return Category.builder().name(categoryDTO.getCategoryName()).build();
+    }
+
+    private List<UUID> getProductIds(Category category) {
+        if (category.getProducts() != null) {
+            return category.getProducts()
+                    .stream()
+                    .map(Product::getId)
+                    .collect(Collectors.toList());
+        } else {
+            return new ArrayList<>();
+        }
+    }
+
     private CategoryResponseDTO getCategoryResponseDTO(Category category) {
         List<UUID> productIds = getProductIds(category);
         List<UUID> path = getPath(category);
         List<SubcategoryDTO> subcategoryDTOList = getSubcategoryDTOList(category);
 
-        return categoryMapper.categoryToCategoryResponseDTO(category.getName(), productIds, path, subcategoryDTOList);
+        return categoryMapper.categoryToCategoryResponseDTO(category.getId(), category.getName(), productIds,
+                path, subcategoryDTOList);
     }
 
     private CategoryCreateResponseDTO getCategoryCreateResponseDTO(Category category) {
@@ -92,25 +108,29 @@ public class CategoryServiceImpl implements CategoryService {
         List<UUID> path = getPath(category);
         List<SubcategoryDTO> subcategoryDTOList = getSubcategoryDTOList(category);
 
-        return categoryMapper.categoryToCategoryCreateResponseDTO(category.getName(), category.getLevel(),
-                productIds, path, subcategoryDTOList);
+        return categoryMapper.categoryToCategoryCreateResponseDTO(category.getId(), category.getName(),
+                category.getLevel(), productIds, path, subcategoryDTOList);
     }
 
     private Category retrieveParentCategory(CategoryCreateRequestDTO categoryDTO) throws CategoryNotFoundException {
-        Optional<Category> pCategoryOptional = categoryRepository.findById(categoryDTO.getParentCategoryId());
+        Optional<Category> parentCategoryOptional = categoryRepository.findById(categoryDTO.getParentCategoryId());
 
-        if (pCategoryOptional.isEmpty()) {
+        if (parentCategoryOptional.isEmpty()) {
             throw new CategoryNotFoundException("Unable to find parent category: " + categoryDTO.getCategoryName());
         }
 
-        return pCategoryOptional.get();
+        return parentCategoryOptional.get();
     }
 
     private List<SubcategoryDTO> getSubcategoryDTOList(Category category) {
-        return category.getSubcategories()
-                .stream()
-                .map(categoryMapper::subcategoryToSubcategoryDTO)
-                .toList();
+        if (category.getSubcategories() != null) {
+            return category.getSubcategories()
+                    .stream()
+                    .map(categoryMapper::subcategoryToSubcategoryDTO)
+                    .toList();
+        } else {
+            return new ArrayList<>();
+        }
     }
 
     private List<UUID> getPath(Category category) {

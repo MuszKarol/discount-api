@@ -16,16 +16,21 @@ import java.util.UUID;
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
     Optional<Category> findCategoryByParentIsNull();
 
+    Optional<Category> findCategoryByName(String name);
+
     @Query(value = "SELECT MAX(c.level) FROM Category c")
     Integer findLatestLevel();
 
     Optional<Category> findFirstByLevel(@NotBlank Integer level);
 
-    @Query(value = "SELECT c.* FROM Category c WHERE (c.name REGEXP :regex)", nativeQuery = true)
+    @Query(value = "SELECT * FROM Category c WHERE (c.name REGEXP :regex)", nativeQuery = true)
     List<Category> searchCategoryByNameRegex(@Param("regex") String regexName);
 
-    @Query(value = "SELECT c.* FROM Category c WHERE (c.name REGEXP :regex)", nativeQuery = true)
+    @Query(value = "SELECT * FROM Category c WHERE (c.name REGEXP :regex)", nativeQuery = true)
     Page<Category> getPageableCategoriesByNameRegex(@Param("regex") String regexName, Pageable pageable);
+
+    List<Category> findCategoryByNameContaining(@NotBlank String name);
+    Page<Category> findCategoryByNameContaining(@NotBlank String name, Pageable pageable);
 
     Page<Category> getCategoriesByProductsContains(Product product, Pageable pageable);
 }

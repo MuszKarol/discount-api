@@ -13,6 +13,8 @@ public interface CategoryStructure {
 
     Category addNewCategory(Category parentCategory, Category category);
 
+    void setRootCategory();
+
     Category getRootCategory();
 
     List<Category> findCategoriesByName(String categoryName);
