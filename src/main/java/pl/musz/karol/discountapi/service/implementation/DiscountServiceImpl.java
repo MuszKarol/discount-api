@@ -46,7 +46,7 @@ public class DiscountServiceImpl implements DiscountService {
         return discountRepository.findAll()
                 .stream()
                 .map(this::getDiscountDTOResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -97,14 +97,14 @@ public class DiscountServiceImpl implements DiscountService {
     private List<ImageIdentificationDetailsDTO> getImagesToListOfImageDTO(List<Image> images) {
         return images.stream()
                 .map(imageMapper::imageToImageDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<DiscountDTOResponse> getDiscounts(Date startDate, Date endDate) {
         return discountRepository.getDiscountByGivenDates(startDate, endDate)
                 .stream()
                 .map(this::getDiscountDTOResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Page<DiscountDTOResponse> getDiscount(Date startDate, Date endDate, String productName, Pageable pageable) {

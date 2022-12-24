@@ -49,7 +49,7 @@ public class ImageServiceImpl implements ImageService {
     private List<ImageDTOResponse> getResponseList(UUID discountId, List<Image> images) {
         return images.stream()
                 .map(image -> createImageDTOResponse(discountId, image))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private void save(Discount discount, List<Image> images) {

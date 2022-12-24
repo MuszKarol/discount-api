@@ -88,7 +88,7 @@ public class CategoryServiceImpl implements CategoryService {
             return category.getProducts()
                     .stream()
                     .map(Product::getId)
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             return new ArrayList<>();
         }
