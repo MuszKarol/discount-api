@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  local-sonar:
+    image: sonarqube:8.9.1-community
+    environment:
+      - sonar.forceAuthentication=false
+    ports:
+      - "127.0.0.1:9001:9000"

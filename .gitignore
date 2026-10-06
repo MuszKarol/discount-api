@@ -1,4 +1,6 @@
-src/main/resources/application.properties
+bin/
+src/main/resources/application*
+src/main/resources/images
 HELP.md
 target/
 !.mvn/wrapper/maven-wrapper.jar
